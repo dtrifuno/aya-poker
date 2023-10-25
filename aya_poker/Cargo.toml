@@ -1,0 +1,28 @@
+[package]
+name = "aya_poker"
+version = "0.1.0"
+description = "Fast poker hand evaluation with support for most popular poker variants"
+readme = "../README.md"
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+repository.workspace = true
+license.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[features]
+colored = ["aya_base/colored"]
+colored-4color = ["aya_base/colored", "aya_base/colored-4color"]
+std = ["aya_base/std"]
+
+[dependencies]
+aya_base = { version = "0.1.0", path = "../aya_base" }
+quickdiv = "0.1.1"
+
+[dev-dependencies]
+rstest = "0.18.2"
+fastrand = "2.0.1"
+
+[build-dependencies]
+aya_codegen = { version = "0.1.0", path = "../aya_codegen" }

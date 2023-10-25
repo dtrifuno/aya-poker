@@ -1,0 +1,18 @@
+[package]
+name = "aya_codegen"
+version = "0.1.0"
+description = "Poker hand rank lookup table generator"
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+repository.workspace = true
+license.workspace = true
+keywords = ["cards", "poker", "codegen"]
+categories = ["games"]
+
+[dependencies]
+aya_base = { path = "../aya_base" }
+miniphf = { path = "../miniphf" }
+
+[dev-dependencies]
+fastrand = "2.0.1"

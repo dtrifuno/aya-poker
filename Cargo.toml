@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = ["aya_base", "aya_codegen", "aya_poker", "miniphf"]
+exclude = ["benchmarks"]
+
+[workspace.package]
+edition = "2021"
+rust-version = "1.64"
+authors = ["Darko Trifunovski <dtrifuno@gmail.com>"]
+repository = "https://github.com/dtrifuno/aya-poker"
+license = "Zlib OR Apache-2.0 OR MIT"
+keywords = ["cards", "poker", "no-std"]
+categories = ["games", "no_std"]
