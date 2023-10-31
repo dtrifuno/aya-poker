@@ -11,8 +11,8 @@ keywords = ["cards", "poker", "codegen"]
 categories = ["games"]
 
 [dependencies]
-aya_base = { path = "../aya_base" }
-miniphf = { path = "../miniphf" }
+aya_base = { version = "0.1.0", path = "../aya_base" }
+miniphf = { version = "0.1.0", path = "../miniphf" }
 
 [dev-dependencies]
 fastrand = "2.0.1"
