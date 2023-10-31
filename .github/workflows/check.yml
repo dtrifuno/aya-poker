@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@1.56.0
+      - uses: dtolnay/rust-toolchain@1.64.0
       - uses: mozilla-actions/sccache-action@v0.0.3
       - run: cargo +1.64.0 check --workspace
   test:
