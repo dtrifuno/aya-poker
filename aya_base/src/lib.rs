@@ -4,7 +4,6 @@ mod card;
 pub mod constants;
 mod deck;
 mod hand;
-// mod hand_iter;
 mod rank;
 mod suit;
 
