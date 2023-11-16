@@ -1,5 +1,3 @@
-use core::cell::RefCell;
-
 use aya_poker::{base::Hand, deck::FullDeck, poker_rank};
 
 const SEED: u64 = 42;
@@ -10,13 +8,13 @@ fn main() {
 
 #[divan::bench(consts = [5, 7], sample_count = 1000, sample_size = 1000)]
 fn aya_poker<const N: usize>(bencher: divan::Bencher) {
-    let deck = RefCell::new(FullDeck::with_seed(SEED));
+    let mut deck = FullDeck::with_seed(SEED);
 
     bencher
         .counter(divan::counter::ItemsCount::new(1u32))
         .with_inputs(|| {
-            deck.borrow_mut().reset();
-            deck.borrow_mut().deal(N).unwrap().to_vec()
+            deck.reset();
+            deck.deal(N).unwrap().to_vec()
         })
         .bench_local_refs(|cards| {
             let hand = cards.iter().collect::<Hand>();
@@ -26,13 +24,13 @@ fn aya_poker<const N: usize>(bencher: divan::Bencher) {
 
 #[divan::bench(consts = [5, 7], sample_count = 1000, sample_size = 1000)]
 fn aya_poker_unchecked<const N: usize>(bencher: divan::Bencher) {
-    let deck = RefCell::new(FullDeck::with_seed(SEED));
+    let mut deck = FullDeck::with_seed(SEED);
 
     bencher
         .counter(divan::counter::ItemsCount::new(1u32))
         .with_inputs(|| {
-            deck.borrow_mut().reset();
-            deck.borrow_mut().deal(N).unwrap().to_vec()
+            deck.reset();
+            deck.deal(N).unwrap().to_vec()
         })
         .bench_local_refs(|cards| {
             let mut hand = Hand::new();
@@ -45,19 +43,18 @@ fn aya_poker_unchecked<const N: usize>(bencher: divan::Bencher) {
 
 #[divan::bench_group(name = "ckc-rs (0.1.14)", sample_count = 1000, sample_size = 1000)]
 mod ckc_rs_benches {
-    use super::*;
     use ckc_rs::cards::HandRanker;
+
+    use super::*;
 
     #[divan::bench(name = "5")]
     fn five_cards(bencher: divan::Bencher) {
-        let rng = RefCell::new(fastrand::Rng::with_seed(SEED));
+        let mut rng = fastrand::Rng::with_seed(SEED);
 
         bencher
             .counter(divan::counter::ItemsCount::new(1u32))
             .with_inputs(|| {
-                let cards = rng
-                    .borrow_mut()
-                    .choose_multiple(ckc_rs::deck::POKER_DECK.arr().iter().copied(), 5);
+                let cards = rng.choose_multiple(ckc_rs::deck::POKER_DECK.arr().iter().copied(), 5);
                 let hand = ckc_rs::cards::five::Five::new(
                     cards[0], cards[1], cards[2], cards[3], cards[4],
                 );
@@ -68,14 +65,12 @@ mod ckc_rs_benches {
 
     #[divan::bench(name = "7")]
     fn seven_cards(bencher: divan::Bencher) {
-        let rng = RefCell::new(fastrand::Rng::with_seed(SEED));
+        let mut rng = fastrand::Rng::with_seed(SEED);
 
         bencher
             .counter(divan::counter::ItemsCount::new(1u32))
             .with_inputs(|| {
-                let cards = rng
-                    .borrow_mut()
-                    .choose_multiple(ckc_rs::deck::POKER_DECK.arr().iter().copied(), 7);
+                let cards = rng.choose_multiple(ckc_rs::deck::POKER_DECK.arr().iter().copied(), 7);
                 let hand = ckc_rs::cards::seven::Seven::new(
                     ckc_rs::cards::two::Two::new(cards[5], cards[6]),
                     ckc_rs::cards::five::Five::new(
@@ -93,12 +88,8 @@ fn poker<const N: usize>(bencher: divan::Bencher) {
     let poker_eval = poker::Evaluator::new();
     bencher
         .counter(divan::counter::ItemsCount::new(1u32))
-        .with_inputs(|| {
-            poker::Card::generate_shuffled_deck()
-                .drain(..N)
-                .collect::<Vec<_>>()
-        })
-        .bench_local_refs(|hand| poker_eval.evaluate(hand).unwrap())
+        .with_inputs(|| poker::Card::generate_shuffled_deck().drain(..N).collect())
+        .bench_local_refs(|hand: &mut Vec<_>| poker_eval.evaluate(hand).unwrap())
 }
 
 #[divan::bench_group(name = "rs_poker (2.0)", sample_count = 1000, sample_size = 1000)]
@@ -124,13 +115,13 @@ mod rs_poker_benches {
 
 #[divan::bench(name = "rust_poker (0.1.14)", consts = [5, 7], sample_count = 1000, sample_size = 1000)]
 fn rust_poker<const N: usize>(bencher: divan::Bencher) {
-    let rng = RefCell::new(fastrand::Rng::with_seed(SEED));
+    let mut rng = fastrand::Rng::with_seed(SEED);
 
     bencher
         .counter(divan::counter::ItemsCount::new(1u32))
         .with_inputs(|| {
             let mut deck = rust_poker::hand_evaluator::CARDS.to_vec();
-            rng.borrow_mut().shuffle(&mut deck);
+            rng.shuffle(&mut deck);
             deck[..N].to_vec()
         })
         .bench_local_refs(|cards| {
