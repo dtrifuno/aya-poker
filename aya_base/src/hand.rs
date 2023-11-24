@@ -165,16 +165,6 @@ impl Extend<Card> for Hand {
         for card in iter {
             self.insert_unchecked(&card);
         }
-
-        assert_eq!(
-            self.len() as u32,
-            self.mask.count_ones(),
-            "hand cannot contain duplicate cards"
-        );
-        assert!(
-            self.mask.count_ones() <= MAX_HAND_SIZE as u32,
-            "hand cannot contain more than 7 cards"
-        );
     }
 }
 
