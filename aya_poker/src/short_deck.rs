@@ -9,19 +9,20 @@ include!(concat!(env!("OUT_DIR"), "/short_deck.rs"));
 pub struct ShortDeckHandRank(pub u16);
 
 /// Returns the rank of the best 5-card six-or-better poker hand that can be
-/// made from the given cards.
+/// made from the given cards. 
+/// 
+/// The caller is responsible for verifying that the hand does not contains
+/// any cards of rank less than 6. Otherwise, it silently returns an arbitrary
+/// value.
 ///
 /// Note that this is different from calling [`poker_rank`](crate::poker_rank)
-/// on a six-or-better hand: A-9-8-7-6 makes a straight, and flushes rank
-/// higher than full houses.
+/// on a six-or-better hand: in short-deck poker the hand A-9-8-7-6 makes a
+/// straight, and flushes rank higher than full houses.
 ///
 /// If `hand` contains fewer than 5 cards, the missing cards are considered
 /// to be the worst possible kickers for the made hand, i.e. the empty hand
-/// ranks as a J-high, while "Ah As" as pair of aces, with 8, 7 and 6 kickers.
-///
-/// # Panics
-///
-/// Panics if the hand contains a card of rank less than 6.
+/// ranks as a J-high, while "Ah As" as a pair of aces, with an 8, 7,
+/// and 6 as kickers.
 ///
 /// # Examples
 ///
@@ -34,10 +35,6 @@ pub struct ShortDeckHandRank(pub u16);
 /// ```
 #[inline]
 pub fn short_deck_rank(hand: &Hand) -> ShortDeckHandRank {
-    if !hand.is_six_plus() {
-        panic!("expected six+ hand, received {:?}", hand);
-    }
-
     if hand.has_flush() {
         ShortDeckHandRank(SIX_PLUS_FLUSH_PHF.get(hand.flush_key() as u64))
     } else {
@@ -154,17 +151,6 @@ mod tests {
         }
 
         Ok(())
-    }
-
-    #[rstest]
-    #[case("Ah 5d")]
-    #[case("3c Jd Th 9s 6c")]
-    #[case("Jc Ts 8d Th 4s")]
-    #[case("Qc Qs Qd Ah 2h")]
-    #[should_panic]
-    fn invalid_hand(#[case] hand: &str) {
-        let hand = hand.parse().expect("not a valid hand");
-        short_deck_rank(&hand);
     }
 
     #[test]
