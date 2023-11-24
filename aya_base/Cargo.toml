@@ -1,8 +1,8 @@
 [package]
 name = "aya_base"
-version = "0.1.0"
 description = "Playing card library for efficient hand lookup"
 readme = "README.md"
+version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 authors.workspace = true

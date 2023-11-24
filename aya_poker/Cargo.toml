@@ -1,8 +1,8 @@
 [package]
 name = "aya_poker"
-version = "0.1.0"
 description = "Fast poker hand evaluation with support for most popular poker variants"
 readme = "../README.md"
+version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 authors.workspace = true
