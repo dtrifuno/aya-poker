@@ -75,7 +75,7 @@ pub fn insert_ranks(
         hand_value += 1;
         for &ranks in value_class {
             let key = key_fn(ranks);
-            let r = lookup_table.insert(key, hand_value);
+            lookup_table.insert(key, hand_value);
         }
     }
     hand_value
