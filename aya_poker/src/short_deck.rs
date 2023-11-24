@@ -9,8 +9,8 @@ include!(concat!(env!("OUT_DIR"), "/short_deck.rs"));
 pub struct ShortDeckHandRank(pub u16);
 
 /// Returns the rank of the best 5-card six-or-better poker hand that can be
-/// made from the given cards. 
-/// 
+/// made from the given cards.
+///
 /// The caller is responsible for verifying that the hand does not contains
 /// any cards of rank less than 6. Otherwise, it silently returns an arbitrary
 /// value.
